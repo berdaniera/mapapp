@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>ellymap.com // custom elevation posters</title>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <style>
+      body { padding-top: 70px; }
+      .crop { display: none; }
+      .loading {
+        display: none;
+        text-align:center;
+        width: 100%;
+      }
+      .checkout {
+        display: none;
+        width: 100%;
+      }
+      .prooferr {
+        display: none;
+        text-align:center;
+        width: 100%;
+      }
+    </style>
+    <style type="text/css" media="screen">
+      form article label {
+        display: block;
+        margin: 5px;
+      }
+      form .submit {
+        margin: 15px 0;
+      }
+    </style>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico')}}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico')}}" type="image/x-icon">
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script type="text/javascript">
+      Stripe.setPublishableKey('pk_test_l5YKfU1q1PfBHJ1QKTudr3yF');
+    </script>
+    <script src="https://use.fontawesome.com/41319a65b9.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><i class="fa fa-globe" aria-hidden="true" style="text-decoration:none;"></i> ellymap.</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="#create">CREATE</a></li>
+                    <li><a href="#about">ABOUT</a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1>Create elevation maps of your world</h1>
+                <br>
+                <!-- <p class="lead">Create your elly map today.</p>#3071a9
+                <ul class="list-unstyled">
+                    <li>Bootstrap v3.3.7</li>
+                    <li>jQuery v1.11.1</li>
+                </ul> -->
+            </div>
+        </div>
+        <!-- /.row  col-lg-offset-3-->
+
+        <a name="create"></a>
+        <div class="row">
+          <div class="col-lg-6">
+            <p class="lead text-primary">Start here.</p>
+            <span>SIZE &nbsp;</span>
+            <div class="btn-group" id="size" data-toggle="buttons">
+              <label class="btn btn-primary">
+                <input type="radio" name="size" value="1824" autocomplete="off"> 18×24"
+              </label>
+              <label class="btn btn-primary active">
+                <input type="radio" name="size" value="2436" autocomplete="off" checked> 24×36"
+              </label>
+            </div>
+            &nbsp; Total (incl. shipping): <span class="lead" id="price">$50</span>
+          <br><br>
+            <span>DIRECTION &nbsp;</span>
+            <div class="btn-group" id="orient" data-toggle="buttons">
+              <label class="btn btn-primary active">
+                <input type="radio" name="orient" value="portrait" autocomplete="off" checked> Portrait
+              </label>
+              <label class="btn btn-primary">
+                <input type="radio" name="orient" value="landscape" autocomplete="off"> Landscape
+              </label>
+            </div>
+          <br><br>
+            <span>CUTOUT &nbsp;</span>
+            <div class="btn-group" id="cut" data-toggle="buttons">
+              <label class="btn btn-primary active">
+                <input type="radio" name="cut" value="none" autocomplete="off" checked> None
+              </label>
+              <label class="btn btn-primary">
+                <input type="radio" name="cut" value="ctry" autocomplete="off"> Country
+              </label>
+              <label class="btn btn-primary">
+                <input type="radio" name="cut" value="stat" autocomplete="off"> U.S. State
+              </label>
+            </div>
+          <br><br>
+
+          <div class="crop" id="ctry"><select class="form-control" id="countries">
+             <option value='wAF'>Afghanistan</option>
+             <option value='wAL'>Albania</option>
+             <option value='wDZ'>Algeria</option>
+             <option value='wAO'>Angola</option>
+             <option value='wAG'>Antigua and Barbuda</option>
+             <option value='wAR'>Argentina</option>
+             <option value='wAM'>Armenia</option>
+             <option value='wAU'>Australia</option>
+             <option value='wAT'>Austria</option>
+             <option value='wAZ'>Azerbaijan</option>
+             <option value='wBS'>Bahamas</option>
+             <option value='wBH'>Bahrain</option>
+             <option value='wBD'>Bangladesh</option>
+             <option value='wBB'>Barbados</option>
+             <option value='wBY'>Belarus</option>
+             <option value='wBZ'>Belize</option>
+             <option value='wBJ'>Benin</option>
+             <option value='wBT'>Bhutan</option>
+             <option value='wBO'>Bolivia</option>
+             <option value='wBA'>Bosnia and Herzegovina</option>
+             <option value='wBW'>Botswana</option>
+             <option value='wBR'>Brazil</option>
+             <option value='wBN'>Brunei Darussalam</option>
+             <option value='wBG'>Bulgaria</option>
+             <option value='wBF'>Burkina Faso</option>
+             <option value='wMM'>Burma</option>
+             <option value='wBI'>Burundi</option>
+             <option value='wKH'>Cambodia</option>
+             <option value='wCM'>Cameroon</option>
+             <option value='wCA'>Canada</option>
+             <option value='wCV'>Cape Verde</option>
+             <option value='wCF'>Central African Republic</option>
+             <option value='wTD'>Chad</option>
+             <option value='wCL'>Chile</option>
+             <option value='wCN'>China</option>
+             <option value='wCO'>Colombia</option>
+             <option value='wKM'>Comoros</option>
+             <option value='wCG'>Congo</option>
+             <option value='wCR'>Costa Rica</option>
+             <option value='wCI'>Cote d'Ivoire</option>
+             <option value='wHR'>Croatia</option>
+             <option value='wCU'>Cuba</option>
+             <option value='wCY'>Cyprus</option>
+             <option value='wCZ'>Czech Republic</option>
+             <option value='wCD'>Democratic Republic of the Congo</option>
+             <option value='wDK'>Denmark</option>
+             <option value='wDJ'>Djibouti</option>
+             <option value='wDM'>Dominica</option>
+             <option value='wDO'>Dominican Republic</option>
+             <option value='wEC'>Ecuador</option>
+             <option value='wEG'>Egypt</option>
+             <option value='wSV'>El Salvador</option>
+             <option value='wGQ'>Equatorial Guinea</option>
+             <option value='wER'>Eritrea</option>
+             <option value='wEE'>Estonia</option>
+             <option value='wET'>Ethiopia</option>
+             <option value='wFK'>Falkland Islands (Malvinas)</option>
+             <option value='wFJ'>Fiji</option>
+             <option value='wFI'>Finland</option>
+             <option value='wFR'>France</option>
+             <option value='wGF'>French Guiana</option>
+             <option value='wPF'>French Polynesia</option>
+             <option value='wGA'>Gabon</option>
+             <option value='wGM'>Gambia</option>
+             <option value='wGE'>Georgia</option>
+             <option value='wDE'>Germany</option>
+             <option value='wGH'>Ghana</option>
+             <option value='wGR'>Greece</option>
+             <option value='wGL'>Greenland</option>
+             <option value='wGD'>Grenada</option>
+             <option value='wGP'>Guadeloupe</option>
+             <option value='wGU'>Guam</option>
+             <option value='wGT'>Guatemala</option>
+             <option value='wGN'>Guinea</option>
+             <option value='wGW'>Guinea-Bissau</option>
+             <option value='wGY'>Guyana</option>
+             <option value='wHT'>Haiti</option>
+             <option value='wHN'>Honduras</option>
+             <option value='wHU'>Hungary</option>
+             <option value='wIS'>Iceland</option>
+             <option value='wIN'>India</option>
+             <option value='wID'>Indonesia</option>
+             <option value='wIR'>Iran (Islamic Republic of)</option>
+             <option value='wIQ'>Iraq</option>
+             <option value='wIE'>Ireland</option>
+             <option value='wIL'>Israel</option>
+             <option value='wIT'>Italy</option>
+             <option value='wJM'>Jamaica</option>
+             <option value='wJP'>Japan</option>
+             <option value='wJO'>Jordan</option>
+             <option value='wKZ'>Kazakhstan</option>
+             <option value='wKE'>Kenya</option>
+             <option value='wKI'>Kiribati</option>
+             <option value='wKP'>Korea, Democratic People's Republic of</option>
+             <option value='wKR'>Korea, Republic of</option>
+             <option value='wKW'>Kuwait</option>
+             <option value='wKG'>Kyrgyzstan</option>
+             <option value='wLA'>Lao People's Democratic Republic</option>
+             <option value='wLV'>Latvia</option>
+             <option value='wLB'>Lebanon</option>
+             <option value='wLS'>Lesotho</option>
+             <option value='wLR'>Liberia</option>
+             <option value='wLY'>Libyan Arab Jamahiriya</option>
+             <option value='wLT'>Lithuania</option>
+             <option value='wMG'>Madagascar</option>
+             <option value='wMW'>Malawi</option>
+             <option value='wMY'>Malaysia</option>
+             <option value='wML'>Mali</option>
+             <option value='wMT'>Malta</option>
+             <option value='wMQ'>Martinique</option>
+             <option value='wMR'>Mauritania</option>
+             <option value='wMU'>Mauritius</option>
+             <option value='wMX'>Mexico</option>
+             <option value='wFM'>Micronesia, Federated States of</option>
+             <option value='wMN'>Mongolia</option>
+             <option value='wMA'>Morocco</option>
+             <option value='wMZ'>Mozambique</option>
+             <option value='wNA'>Namibia</option>
+             <option value='wNP'>Nepal</option>
+             <option value='wNL'>Netherlands</option>
+             <option value='wAN'>Netherlands Antilles</option>
+             <option value='wNC'>New Caledonia</option>
+             <option value='wNZ'>New Zealand</option>
+             <option value='wNI'>Nicaragua</option>
+             <option value='wNE'>Niger</option>
+             <option value='wNG'>Nigeria</option>
+             <option value='wNO'>Norway</option>
+             <option value='wOM'>Oman</option>
+             <option value='wPK'>Pakistan</option>
+             <option value='wPA'>Panama</option>
+             <option value='wPG'>Papua New Guinea</option>
+             <option value='wPY'>Paraguay</option>
+             <option value='wPE'>Peru</option>
+             <option value='wPH'>Philippines</option>
+             <option value='wPL'>Poland</option>
+             <option value='wPT'>Portugal</option>
+             <option value='wPR'>Puerto Rico</option>
+             <option value='wQA'>Qatar</option>
+             <option value='wMD'>Republic of Moldova</option>
+             <option value='wRE'>Reunion</option>
+             <option value='wRO'>Romania</option>
+             <option value='wRU'>Russia</option>
+             <option value='wRW'>Rwanda</option>
+             <option value='wKN'>Saint Kitts and Nevis</option>
+             <option value='wLC'>Saint Lucia</option>
+             <option value='wVC'>Saint Vincent and the Grenadines</option>
+             <option value='wWS'>Samoa</option>
+             <option value='wST'>Sao Tome and Principe</option>
+             <option value='wSA'>Saudi Arabia</option>
+             <option value='wSN'>Senegal</option>
+             <option value='wSC'>Seychelles</option>
+             <option value='wSL'>Sierra Leone</option>
+             <option value='wSG'>Singapore</option>
+             <option value='wSK'>Slovakia</option>
+             <option value='wSI'>Slovenia</option>
+             <option value='wSB'>Solomon Islands</option>
+             <option value='wSO'>Somalia</option>
+             <option value='wZA'>South Africa</option>
+             <option value='wES'>Spain</option>
+             <option value='wLK'>Sri Lanka</option>
+             <option value='wSD'>Sudan</option>
+             <option value='wSR'>Suriname</option>
+             <option value='wSZ'>Swaziland</option>
+             <option value='wSE'>Sweden</option>
+             <option value='wCH'>Switzerland</option>
+             <option value='wSY'>Syrian Arab Republic</option>
+             <option value='wTJ'>Tajikistan</option>
+             <option value='wTH'>Thailand</option>
+             <option value='wMK'>The former Yugoslav Republic of Macedonia</option>
+             <option value='wTL'>Timor-Leste</option>
+             <option value='wTG'>Togo</option>
+             <option value='wTO'>Tonga</option>
+             <option value='wTT'>Trinidad and Tobago</option>
+             <option value='wTN'>Tunisia</option>
+             <option value='wTR'>Turkey</option>
+             <option value='wTM'>Turkmenistan</option>
+             <option value='wUG'>Uganda</option>
+             <option value='wUA'>Ukraine</option>
+             <option value='wAE'>United Arab Emirates</option>
+             <option value='wGB'>United Kingdom</option>
+             <option value='wTZ'>United Republic of Tanzania</option>
+             <option value='wUS'>United States</option>
+             <option value='wVI'>United States Virgin Islands</option>
+             <option value='wUY'>Uruguay</option>
+             <option value='wUZ'>Uzbekistan</option>
+             <option value='wVU'>Vanuatu</option>
+             <option value='wVE'>Venezuela</option>
+             <option value='wVN'>Viet Nam</option>
+             <option value='wYE'>Yemen</option>
+             <option value='wZM'>Zambia</option>
+             <option value='wZW'>Zimbabwe</option>
+          </select></div>
+
+          <div class="crop" id="stat"><select class="form-control" id="states">
+            <option value='sAL'>Alabama</option>
+            <option value='sAK'>Alaska</option>
+            <option value='sAZ'>Arizona</option>
+            <option value='sAR'>Arkansas</option>
+            <option value='sCA'>California</option>
+            <option value='sCO'>Colorado</option>
+            <option value='sCT'>Connecticut</option>
+            <option value='sDE'>Delaware</option>
+            <option value='sDC'>District of Columbia</option>
+            <option value='sFL'>Florida</option>
+            <option value='sGA'>Georgia</option>
+            <option value='sHI'>Hawaii</option>
+            <option value='sID'>Idaho</option>
+            <option value='sIL'>Illinois</option>
+            <option value='sIN'>Indiana</option>
+            <option value='sIA'>Iowa</option>
+            <option value='sKS'>Kansas</option>
+            <option value='sKY'>Kentucky</option>
+            <option value='sLA'>Louisiana</option>
+            <option value='sME'>Maine</option>
+            <option value='sMD'>Maryland</option>
+            <option value='sMA'>Massachusetts</option>
+            <option value='sMI'>Michigan</option>
+            <option value='sMN'>Minnesota</option>
+            <option value='sMS'>Mississippi</option>
+            <option value='sMO'>Missouri</option>
+            <option value='sMT'>Montana</option>
+            <option value='sNE'>Nebraska</option>
+            <option value='sNV'>Nevada</option>
+            <option value='sNH'>New Hampshire</option>
+            <option value='sNJ'>New Jersey</option>
+            <option value='sNM'>New Mexico</option>
+            <option value='sNY'>New York</option>
+            <option value='sNC'>North Carolina</option>
+            <option value='sND'>North Dakota</option>
+            <option value='sOH'>Ohio</option>
+            <option value='sOK'>Oklahoma</option>
+            <option value='sOR'>Oregon</option>
+            <option value='sPA'>Pennsylvania</option>
+            <option value='sPR'>Puerto Rico</option>
+            <option value='sRI'>Rhode Island</option>
+            <option value='sSC'>South Carolina</option>
+            <option value='sSD'>South Dakota</option>
+            <option value='sTN'>Tennessee</option>
+            <option value='sTX'>Texas</option>
+            <option value='sUT'>Utah</option>
+            <option value='sVT'>Vermont</option>
+            <option value='sVA'>Virginia</option>
+            <option value='sWA'>Washington</option>
+            <option value='sWV'>West Virginia</option>
+            <option value='sWI'>Wisconsin</option>
+            <option value='sWY'>Wyoming</option>
+          </select></div>
+          <br>
+
+            <span>TEXT</span>
+            <input type="text" class="form-control" name="customtext" placeholder="CITY, STATE, COUNTRY, WHATEVER YOU WANT">
+            <br><br>
+            <center><div id="mapouter" style="outline:1px solid #aaa;box-shadow: 10px 10px 20px grey;padding-bottom:20px;display:inline-block;text-align:center;">
+              <div id="mapbox" style="border:20px solid #fff;width:384px;height:540px;"></div>
+              <span id="customtext">CITY, STATE, COUNTRY</span><br>
+              <span id="coordinates">36.0°N // 78.0°W</span>
+            </div></center>
+
+            <br><br>
+        <button type="button" class="btn btn-primary btn-lg btn-block" id="proof">Proof and checkout</button>
+        <br><br>
+        </div>
+
+        <div class="col-lg-6">
+          {% block content %}{% endblock %}
+        <!-- INSERT CHECKOUT CONTAINER HERE -->
+        </div>
+
+      </div>
+    </div>
+    <!-- /.container -->
+
+    <div class="panel" style="background:#dff0d8">
+      <div class="container">
+        <a name="about"></a>
+        <div class="row"><div class="col-lg-12">
+          <br><br>
+          <p class="lead">Our process.</p>
+          <p><i>We love maps.</i> We think that maps can help people understand and appreciate their world.
+            In line with this vision, ellymap donates a portion of our profits to land conservation and open space initiatives.</p>
+          <p><i>How do we make your map?</i> We start with your boundary coordinates and collect the elevation data from a global database.
+            Then we render the map with topographic contours to display all of the hills, valleys, mountains, and ripples.
+            We finish it off with your cutomized title, print it out on high-quality poster paper, and ship it off in a cardboard tube.</p>
+          <br><br>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row"><div class="col-lg-6">
+        <br><br>
+        <p class="lead">Sign up for our email list and get 10% off of your next order.</p>
+        <div class="form-group" id="email-group">
+          <div class="input-group">
+            <input type="text" class="form-control" name="email-list" placeholder="you@someplace.com">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="button" id="email-list">Sign up</button>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 text-center">
+        <br><br>
+        <p>We're excited to see where you put your ellymap! Get in touch with us...</p>
+        <a href=""><i class="fa fa-instagram fa-3x" aria-hidden="true" style="color:#3071a9;text-decoration:none;"></i></a> &nbsp;
+        <a href=""><i class="fa fa-twitter fa-3x" aria-hidden="true" style="color:#3071a9;text-decoration:none;"></i></a> &nbsp;
+        <a href="mailto:ellymapco@google.com"><i class="fa fa-envelope-o fa-3x" aria-hidden="true" style="color:#3071a9;text-decoration:none;"></i></a>
+      </div></div>
+    </div>
+        <br>
+        <br>
+    <footer class="footer">
+      <div class="container" style="text-align:right;">
+        <p class="text-muted">© 2016 ellymap.com // Built with ♥ in Durham, North Carolina</p>
+      </div>
+    </footer>
+
+    <!-- jQuery Version 1.11.1 -->
+    <script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+    <!-- Leaflet JavaScript -->
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <script>
+      Number.prototype.round = function(places) {
+        return +(Math.round(this + "e+" + places)  + "e-" + places);
+      }
+      var coo;
+      var latd;
+      var lond;
+      var coors;
+      var map = L.map('mapbox').setView([36, -78], 5);
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+        maxZoom: 12,
+        minZoom: 3,
+        attribution: '',
+        id: 'mapbox.streets'
+      }).addTo(map);
+
+      coo = map.getCenter();
+      if(coo.lat < 0){ latd='°S // '; }else{ latd='°N // '; }
+      if(coo.lng < 0){ lond='°W '; }else{ lond='°E '; }
+      coors = Math.abs(coo.lat.round(1)) + latd + Math.abs(coo.lng.round(1)) + lond;
+
+      map.on('dragend', function(){
+        coo = map.getCenter();
+        if(coo.lat < 0){ latd='°S // '; }else{ latd='°N // '; }
+        if(coo.lng < 0){ lond='°W'; }else{ lond='°E'; }
+        coors = Math.abs(coo.lat.round(1)) + latd + Math.abs(coo.lng.round(1)) + lond;
+        //console.log(coors);
+        $("#coordinates").text(coors);
+      });
+
+      // set clip
+      $('input[name=cut]').change(function() {
+        $(".crop").hide();
+        if($('input[name=cut]:checked').val()=="ctry"){
+          $("#ctry").show();
+        } else if($('input[name=cut]:checked').val()=="stat") {
+          $("#stat").show();
+        }
+      });
+
+      var ar;
+      var arp;
+      var wid;
+      // change size
+      $('input[name=size]').change(function(){
+        if($('input[name=size]:checked').val()=="1824"){
+          $("#price").text("$40");
+          ar = 0.8; // map aspect ratio
+          arp = 0.75; // document aspect ratio
+          $('#orderAmt').val("4000");
+          $("#price-final").text("$40");
+        } else { // 24x36
+          $("#price").text("$50");
+          ar = 0.688; // map aspect ratio
+          arp = 0.667; // document aspect ratio
+          $('#orderAmt').val("5000");
+          $("#price-final").text("$50");
+        }
+        if($('input[name=orient]:checked').val()=='landscape'){
+          $("#mapbox").width( $("#mapbox").height()/ar );
+          $('#proofimg').width( $("#mapbox").height()/arp ); // switch width
+        }else{
+          $("#mapbox").height( $("#mapbox").width()/ar );
+          $("#proofimg").height( $("#proofimg").width()/arp );
+        }
+        map.invalidateSize();
+      });
+      // change orientation
+      $('input[name=orient]').change(function(){
+        wid = $("#mapbox").width();
+        $("#mapbox").width( $("#mapbox").height() );
+        $("#mapbox").height( wid );
+        widp = $("#proofimg").width();
+        $("#proofimg").width( $("#proofimg").height() );
+        $("#proofimg").height( widp );
+        map.invalidateSize();
+      });
+      // check custom text
+      $('input[name=customtext]').change(function(){
+        if($('input[name=customtext]').val().length>0){
+          $("#customtext").text($('input[name=customtext]').val().toUpperCase());
+        }else{
+          $("#customtext").text("CITY, STATE, COUNTRY");
+        }
+      });
+
+      // reset
+      $(function(){
+        $("button#backup").click(function(){
+          $('#checkout').hide();
+          $("button#proof").prop("disabled", false);
+        })
+      });
+      $(function(){
+        $("button#backupa").click(function(){
+          $('#prooferr').hide();
+          $("button#proof").prop("disabled", false);
+        })
+      });
+
+
+      // generate proof
+      $(function(){
+        $("button#proof").click(function(){
+          console.log(map.getBounds());
+          $("#loading").show();
+          $("button#proof").prop("disabled", true);
+          $('html, body').animate({
+            scrollTop: $("#loading").offset().top
+          },500);
+          var data = {};
+          data['xmin'] = map.getBounds()._southWest.lng;
+          data['xmax'] = map.getBounds()._northEast.lng;
+          data['ymin'] = map.getBounds()._southWest.lat;
+          data['ymax'] = map.getBounds()._northEast.lat;
+          var textm = $('input[name=customtext]').val().toUpperCase(); // title
+          if (typeof textm == 'undefined') textm = "";
+          data['textm'] = textm;
+          data['textc'] = coors;// coordinates
+          data['size'] = $('input[name=size]:checked').val();
+          data['shape'] = $('input[name=orient]:checked').val();
+          if($('input[name=cut]:checked').val()=="ctry"){
+            data['clip'] = $('#countries').val();
+          } else if($('input[name=cut]:checked').val()=="stat") {
+            data['clip'] = $("#states").val();
+          }else{
+            data['clip'] = '';
+          };
+          $.ajax({
+            type: 'POST',
+            url:'/_proof',
+            data: JSON.stringify(data),
+            contentType: 'application/json;charset=UTF-8',
+            success: function(response){
+              $('#orderId').val(response.result);
+              $('#orderData').val(JSON.stringify(response.params));
+              var imgsrc = "/static/proofs/".concat(response.result,".png");
+              $("#loading").hide();
+              $('#checkout').show();
+              $('#proofimg').css({'background-image':'url('+imgsrc+')', 'background-size':'cover', 'background-position':'center'})
+            },
+            error: function(error){
+              console.log(error);
+              $('#prooferr').show();
+              $("#loading").hide();
+            }
+          });
+        });
+      });
+    </script>
+
+    <script>
+      // check coupon
+      $(function(){
+        $("button#coupon-check").click(function(){
+          var data = {};
+          data['coupon'] = $('input[name=coupon-code]').val();
+          $.ajax({
+            type: 'POST',
+            url:'/_coupon-check',
+            data: JSON.stringify(data),
+            contentType: 'application/json;charset=UTF-8',
+            success: function(response){
+              if(response.res==1){
+                var discount = 1 - response.disc;
+                $('#coupon-group').attr("class","form-group has-success");
+                var discountprice = discount * parseInt($('#orderAmt').val());
+                $('#orderAmt').val(discountprice.toString());
+                discountprice = discountprice/100
+                $("#price-final").text("$"+discountprice.toString());
+              }else{
+                $('#coupon-group').attr("class","form-group has-warning");
+              }
+            },
+            error: function(error){
+              console.log(error);
+            }
+          });
+        });
+      });
+
+      // email form
+      $(function(){
+        $("button#email-list").click(function(){
+          var data = {};
+          data['email'] = $('input[name=email-list]').val();
+          $.ajax({
+            type: 'POST',
+            url:'/_email-list',
+            data: JSON.stringify(data),
+            contentType: 'application/json;charset=UTF-8',
+            success: function(response){
+              console.log(response.result);
+              $('input[name=email-list]').val("");
+              $('#email-group').attr("class","form-group has-success");
+            },
+            error: function(error){
+              console.log(error);
+            }
+          });
+        });
+      });
+
+      // Collect payment
+      $(function() {
+        $("button#pay").click(function(event){
+          // Disable the submit button to prevent repeated clicks:
+          $('button#pay').prop('disabled', true);
+          // Request a token from Stripe:
+          Stripe.card.createToken($('#payment-form'), stripeResponseHandler);
+          // Prevent the form from being submitted:
+          return false;
+        });
+      });
+      function stripeResponseHandler(status, response) {
+        if (response.error) { // Problem!
+          // Show the errors on the form:
+          $('#payment-form').find('.payment-errors').text(response.error.message);
+          $('button#pay').prop('disabled', false); // Re-enable submission
+        } else { // Token was created!
+          // Get the token ID:
+          var token = response.id;
+          // Insert the token ID into the form so it gets submitted to the server:
+          $('#payment-form').append($('<input type="hidden" name="stripeToken">').val(token));
+          // Submit the form:
+          $('#payment-form').get(0).submit();
+          // console.log(token);
+        }
+      };
+    </script>
+
+</body>
+
+</html>

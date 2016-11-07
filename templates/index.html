@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block content %}
+<div id="loading" class="loading">
+    <p class="lead">&nbsp;</p>
+  <img src="{{ url_for('static', filename='squares.gif')}}">
+  <p class="lead">Sit tight. We're preparing your proof...</p>
+</div>
+
+<div id="prooferr" class="prooferr">
+    <p class="lead">&nbsp;</p>
+  <p class="lead">Oops, something went wrong. Please <button type="button" class="btn btn-default btn-xs" id="backupa">try again</button> or email us at <a href="mailto:ellymapco@gmail.com">ellymapco@gmail.com</a>.</p>
+</div>
+
+<div id="checkout" class="checkout">
+ <p class="lead text-primary">Preview here.</p>
+ <center><div id="proofimg" style="outline:1px solid #aaa;width:400px;height:600px;"></div>
+ <br>
+ Need to change something? &nbsp; <button type="button" class="btn btn-default btn-xs" id="backup">Go back.</button><br>
+ </center>
+ <p class="lead text-primary">Checkout here.</p>
+
+ <form action="/charge" method="POST" id="payment-form">
+   <div name="checkout">
+    <h3>Shipping address</h3>
+     <div class="input-group">
+       <span class="input-group-addon">Name</span>
+       <input type="text" class="form-control" placeholder="Name" name="name">
+     </div>
+     <br>
+     <div class="input-group">
+       <span class="input-group-addon">Email</span>
+       <input type="text" class="form-control" placeholder="you@someplace.com" name="email">
+     </div>
+     <br>
+     <div class="input-group">
+       <span class="input-group-addon">Address</span>
+       <input type="text" class="form-control" name="address">
+     </div>
+     <br>
+     <div class="input-group">
+       <span class="input-group-addon">City</span>
+       <input type="text" class="form-control" name="city">
+       <span class="input-group-addon">State</span>
+       <input type="text" class="form-control" name="state">
+     </div>
+     <br>
+     <div class="input-group">
+       <span class="input-group-addon">Zip</span>
+       <input type="text" class="form-control" name="zip">
+       <span class="input-group-addon">Country</span>
+       <input type="text" class="form-control" name="country" value="USA">
+     </div>
+    <h3>Credit card</h3>
+    <p class="text-muted">
+      <i class="fa fa-cc-visa fa-2x"></i>
+      <i class="fa fa-cc-mastercard fa-2x"></i>
+      <i class="fa fa-cc-amex fa-2x"></i>
+      <i class="fa fa-cc-jcb fa-2x"></i>
+      <i class="fa fa-cc-discover fa-2x"></i>
+      <i class="fa fa-cc-diners-club fa-2x"></i>
+      Powered and secured by <a href="https://stripe.com/">Stripe</a>.
+    </p>
+     <span class="payment-errors"></span>
+     <div class="input-group">
+         <span class="input-group-addon">Credit Card Number</span>
+         <input type="text" class="form-control" maxlength="25" data-stripe="number" placeholder="XXXX XXXX XXXX XXXX">
+     </div>
+     <br>
+     <div class="input-group">
+         <span class="input-group-addon">Expiration</span>
+         <input type="text" class="form-control" size="2" data-stripe="exp_month" maxlength="2" placeholder="MM">
+         <span class="input-group-addon">/</span>
+         <input type="text" class="form-control" size="2" data-stripe="exp_year" maxlength="2" placeholder="YY">
+         <span class="input-group-addon">CVC</span>
+         <input type="text" class="form-control" data-stripe="cvc" size="3" maxlength="3">
+         <!-- <span class="input-group-addon">Billing Zip</span>
+         <input type="text" class="form-control" data-stripe="address_zip"> -->
+     </div>
+     <br>
+     <div class="form-group" id="coupon-group">
+       <div class="input-group">
+         <span class="input-group-addon">Coupon code</span>
+         <input type="text" class="form-control" name="coupon-code">
+         <span class="input-group-btn">
+           <button class="btn btn-primary" type="button" id="coupon-check">Apply</button>
+         </span>
+       </div>
+     </div>
+
+     <br>
+     <button type="button" class="btn btn-primary btn-lg btn-block" id="pay">Buy (<span id="price-final">$50</span>)</button>
+     <br><br>
+   </div>
+   <input type="hidden" id="orderId" name="orderId" value="">
+   <input type="hidden" id="orderData" name="orderData" value="">
+   <input type="hidden" id="orderAmt" name="orderAmt" value="5000">
+ </form>
+</div>
+{% endblock %}

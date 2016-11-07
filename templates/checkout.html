@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+ <!-- change form to bootstrap! -->
+ <img src={{proofimg}}><br>
+  <form action="/charge" method="post">
+    <div class="col-lg-6 col-lg-offset-3" name="checkout">
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Name</span>
+        <input type="text" class="form-control" placeholder="Name" name="name">
+      </div>
+      <br>
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Email</span>
+        <input type="text" class="form-control" placeholder="you@someplace.com" name="email">
+      </div>
+      <br>
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Address</span>
+        <input type="text" class="form-control" placeholder="Mailing address" name="address">
+      </div>
+      <br>
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">City</span>
+        <input type="text" class="form-control" name="city">
+        <span class="input-group-addon" id="basic-addon1">State</span>
+        <input type="text" class="form-control" name="state">
+      </div>
+      <br>
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">Zip</span>
+        <input type="text" class="form-control" name="zip">
+        <span class="input-group-addon" id="basic-addon1">Country</span>
+        <input type="text" class="form-control" name="country" value="USA">
+      </div>
+      <br><br>
+      <button type="button" class="btn btn-primary btn-lg btn-block" id="pay">Buy <span id="price">$50</span></button>
+      <script src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button" data-key="{{ key }}"></script>
+      <br><br>
+    </div>
+  </form>
+{% endblock %}
