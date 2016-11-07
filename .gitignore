@@ -1,0 +1,8 @@
+elly.py
+elly.ini
+ellymap/*
+elly.pyc
+elly.sock
+*.csv
+wsgi.py
+wsgi.pyc
