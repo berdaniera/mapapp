@@ -128,6 +128,7 @@ $(function(){
     }else{
       data['clip'] = '';
     };
+    data['zoom'] = map.getZoom();
     $.ajax({
       type: 'POST',
       url:'/_proof',

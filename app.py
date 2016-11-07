@@ -31,8 +31,8 @@ fonts = fm.findSystemFonts()
 path = [x for x in fonts if 'Lato-Light.ttf' in x][0]
 prop = fm.FontProperties(fname=path)
 linecol = "#333333"
-narr = range(0,5000,50)
-wide = range(0,5000,200)
+narr = range(0,9000,50)
+wide = range(0,9000,200)
 
 @app.route('/')
 def index():
@@ -52,7 +52,9 @@ def proof():
     v['size'] = request.json['size']
     v['shape'] = request.json['shape']
     v['clip'] = request.json['clip']
-    print(v['size'])
+    #
+    zooml = request.json['zoom']
+    #
     lats = range(int(math.floor(v['ymin'])), int(math.ceil(v['ymax'])))
     lngs = range(int(math.floor(v['xmin'])), int(math.ceil(v['xmax'])))
     if(lats[1]==lats[0]):
@@ -80,9 +82,19 @@ def proof():
     mos.write('\n'.join(lx))
     mos.close()
     # BUILD RASTER
+    reso = 0.000833333
+    if zooml==3:
+        reso = reso*8
+    elif zooml==4:
+        reso = reso*6
+    elif zooml==5:
+        reso = reso*4
+    else:
+        reso = reso*2
     comm = "cd "+zdir+" && "+\
         "gdalbuildvrt -overwrite -input_file_list mosaic.txt out.vrt && "+\
-        "gdalwarp --config GDAL_CACHEMAX 500 -wm 500 -q -overwrite -dstnodata 0 -te "+str(v['xmin'])+" "+str(v['ymin'])+" "+str(v['xmax'])+" "+str(v['ymax'])+" -tr 0.001666666667 0.001666666667 -r average out.vrt out.tif"
+        "gdalwarp --config GDAL_CACHEMAX 500 -wm 500 -q -overwrite -dstnodata 0 "+\
+        "-te "+str(v['xmin'])+" "+str(v['ymin'])+" "+str(v['xmax'])+" "+str(v['ymax'])+" -tr "+reso+" "+reso+" -r average out.vrt out.tif"
     call(comm, shell=True)
     with rasterio.open(zdir+'/out.tif', 'r+') as r:
         rr = r.read()  # read all raster values
@@ -104,7 +116,7 @@ def proof():
         #proje = "+proj=lcc +lat_1="+str(ex[0])+" +lat_2="+str(ex[1])+" +lat_0="+str((ex[0]+ex[1])/2)+" +lon_0="+str((ex[2]+ex[3])/2)+" +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m"
         proje = "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
         clipcomm = "gdalwarp --config GDAL_CACHEMAX 500 -wm 500 -s_srs '+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0' -t_srs '"+proje+\
-            "' -overwrite -dstnodata 0 -r average -crop_to_cutline -cutline "+zdir+"/crop.shp "+zdir+"/out.tif "+zdir+"/outc.tif"
+            "' -overwrite -dstnodata 0 -r average -cutline "+zdir+"/crop.shp "+zdir+"/out.tif "+zdir+"/outc.tif"
         call(clipcomm, shell=True)
         rrr = rasterio.open(zdir+'/outc.tif','r').read()
     else: # reproject to web mercator...
@@ -117,8 +129,12 @@ def proof():
     # PLOTS
     #rrr[rrr<0] = 0
     maxele = rrr.max()
+    minele = rrr.min()
     ells = [n for n in narr if n < maxele]
-    cols = ["#333333" if z%200==0 else "#777777" for z in narr]
+    if (maxele-minele)>2500:
+        ells = [e for e in ells if e%100==0]
+    #
+    cols = ["#333333" if z%200==0 else "#777777" for z in ells]
     #
     if(v['shape']=="portrait"):
         wid = int(v['size'][:2])
