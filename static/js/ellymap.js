@@ -9,8 +9,10 @@ var map = L.map('mapbox').setView([36, -78], 5);
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
   maxZoom: 12,
   minZoom: 3,
+  maxBounds: [[-60,-180],[60,180]],
   attribution: '',
-  id: 'mapbox.streets'
+  id: 'mapbox.streets',
+  nowrap: true
 }).addTo(map);
 
 coo = map.getCenter();
@@ -76,7 +78,7 @@ $('input[name=customtext]').change(function(){
     $("#customtext").text($('input[name=customtext]').val().toUpperCase());
     $("#customtext").removeClass("text-muted");
   }else{
-    $("#customtext").text("Your text here");
+    $("#customtext").text("YOUR TEXT HERE");
     $("#customtext").addClass("text-muted");
   }
 });
