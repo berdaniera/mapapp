@@ -15,7 +15,7 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
 
 coo = map.getCenter();
 if(coo.lat < 0){ latd='°S // '; }else{ latd='°N // '; }
-if(coo.lng < 0){ lond='°W '; }else{ lond='°E '; }
+if(coo.lng < 0){ lond='°W'; }else{ lond='°E'; }
 coors = Math.abs(coo.lat.round(1)) + latd + Math.abs(coo.lng.round(1)) + lond;
 
 map.on('dragend', function(){
@@ -37,43 +37,39 @@ $('input[name=cut]').change(function() {
   }
 });
 
-var ar;
-var arp;
-var wid;
-// change size
-$('input[name=size]').change(function(){
+// set map window sizes
+function getMapSize(){
   if($('input[name=size]:checked').val()=="1824"){
     $("#price").text("$40");
-    ar = 0.8; // map aspect ratio
-    //arp = 0.75; // document aspect ratio
     $('#orderAmt').val("4000");
     $("#price-final").text("$40");
-  } else { // 24x36
+    if($('input[name=orient]:checked').val()=="landscape"){ // 1824 landscape
+        $('#mapbox').width(440);
+        $('#mapbox').height(280);
+    } else { // 1824 portrait
+        $('#mapbox').width(320);
+        $('#mapbox').height(400);
+    }
+  } else {
     $("#price").text("$50");
-    ar = 0.688; // map aspect ratio
-    //arp = 0.667; // document aspect ratio
     $('#orderAmt').val("5000");
     $("#price-final").text("$50");
-  }
-  if($('input[name=orient]:checked').val()=='landscape'){
-    $("#mapbox").width( $("#mapbox").height()/ar );
-    //$('#proofimg').width( $("#mapbox").height()/arp ); // switch width
-  }else{
-    $("#mapbox").height( $("#mapbox").width()/ar );
-    //$("#proofimg").height( $("#proofimg").width()/arp );
+    if($('input[name=orient]:checked').val()=="landscape"){ //2436 landscape
+        $('#mapbox').width(510);
+        $('#mapbox').height(300);
+    } else { //2436 portrait
+        $('#mapbox').width(330);
+        $('#mapbox').height(480);
+    }
   }
   map.invalidateSize();
-});
+}
+
+// change size
+$('input[name=size]').change( getMapSize() );
 // change orientation
-$('input[name=orient]').change(function(){
-  wid = $("#mapbox").width();
-  $("#mapbox").width( $("#mapbox").height() );
-  $("#mapbox").height( wid );
-  //widp = $("#proofimg").width();
-  //$("#proofimg").width( $("#proofimg").height() );
-  //$("#proofimg").height( widp );
-  map.invalidateSize();
-});
+$('input[name=orient]').change( getMapSize() );
+
 // check custom text
 $('input[name=customtext]').change(function(){
   if($('input[name=customtext]').val().length>0){
@@ -85,67 +81,67 @@ $('input[name=customtext]').change(function(){
 
 // reset
 $(function(){
-$("button#backup").click(function(){
-  $('#checkout').hide();
-  $("button#proof").prop("disabled", false);
-})
+  $("button#backup").click(function(){
+    $('#checkout').hide();
+    $("button#proof").prop("disabled", false);
+  })
 });
 $(function(){
-$("button#backupa").click(function(){
-  $('#prooferr').hide();
-  $("button#proof").prop("disabled", false);
-})
+  $("button#backupa").click(function(){
+    $('#prooferr').hide();
+    $("button#proof").prop("disabled", false);
+  })
 });
 
 
 // generate proof
 $(function(){
-$("button#proof").click(function(){
-  console.log(map.getBounds());
-  $("#loading").show();
-  $("button#proof").prop("disabled", true);
-  $('html, body').animate({
-    scrollTop: $("#loading").offset().top
-  },500);
-  var data = {};
-  data['xmin'] = map.getBounds()._southWest.lng;
-  data['xmax'] = map.getBounds()._northEast.lng;
-  data['ymin'] = map.getBounds()._southWest.lat;
-  data['ymax'] = map.getBounds()._northEast.lat;
-  var textm = $('input[name=customtext]').val().toUpperCase(); // title
-  if (typeof textm == 'undefined') textm = "";
-  data['textm'] = textm;
-  data['textc'] = coors;// coordinates
-  data['size'] = $('input[name=size]:checked').val();
-  data['shape'] = $('input[name=orient]:checked').val();
-  if($('input[name=cut]:checked').val()=="ctry"){
-    data['clip'] = $('#countries').val();
-  } else if($('input[name=cut]:checked').val()=="stat") {
-    data['clip'] = $("#states").val();
-  }else{
-    data['clip'] = '';
-  };
-  $.ajax({
-    type: 'POST',
-    url:'/_proof',
-    data: JSON.stringify(data),
-    contentType: 'application/json;charset=UTF-8',
-    success: function(response){
-      $('#orderId').val(response.result);
-      $('#orderData').val(JSON.stringify(response.params));
-      var imgsrc = "/static/proofs/".concat(response.result,".png");
-      $("#loading").hide();
-      $('#checkout').show();
-      //$('#proofimg').css({'background-image':'url('+imgsrc+')', 'background-size':'cover', 'background-position':'center'})
-      $('#proofimg img').attr('src',imgsrc);//append('<img src="'+imgsrc+'">')
-    },
-    error: function(error){
-      console.log(error);
-      $('#prooferr').show();
-      $("#loading").hide();
-    }
+  $("button#proof").click(function(){
+    console.log(map.getBounds());
+    $("#loading").show();
+    $("button#proof").prop("disabled", true);
+    $('html, body').animate({
+      scrollTop: $("#loading").offset().top
+    },500);
+    var data = {};
+    data['xmin'] = map.getBounds()._southWest.lng;
+    data['xmax'] = map.getBounds()._northEast.lng;
+    data['ymin'] = map.getBounds()._southWest.lat;
+    data['ymax'] = map.getBounds()._northEast.lat;
+    var textm = $('input[name=customtext]').val().toUpperCase(); // title
+    if (typeof textm == 'undefined') textm = "";
+    data['textm'] = textm;
+    data['textc'] = coors;// coordinates
+    data['size'] = $('input[name=size]:checked').val();
+    data['shape'] = $('input[name=orient]:checked').val();
+    if($('input[name=cut]:checked').val()=="ctry"){
+      data['clip'] = $('#countries').val();
+    } else if($('input[name=cut]:checked').val()=="stat") {
+      data['clip'] = $("#states").val();
+    }else{
+      data['clip'] = '';
+    };
+    $.ajax({
+      type: 'POST',
+      url:'/_proof',
+      data: JSON.stringify(data),
+      contentType: 'application/json;charset=UTF-8',
+      success: function(response){
+        $('#orderId').val(response.result);
+        $('#orderData').val(JSON.stringify(response.params));
+        var imgsrc = "/static/proofs/".concat(response.result,".png");
+        $("#loading").hide();
+        $('#checkout').show();
+        //$('#proofimg').css({'background-image':'url('+imgsrc+')', 'background-size':'cover', 'background-position':'center'})
+        $('#proofimg img').attr('src',imgsrc);//append('<img src="'+imgsrc+'">')
+      },
+      error: function(error){
+        console.log(error);
+        $('#prooferr').show();
+        $("#loading").hide();
+      }
+    });
   });
-});
 });
 
 // check coupon
