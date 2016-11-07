@@ -74,8 +74,10 @@ $('input[name=orient]').change( getMapSize );
 $('input[name=customtext]').change(function(){
   if($('input[name=customtext]').val().length>0){
     $("#customtext").text($('input[name=customtext]').val().toUpperCase());
+    $("#customtext").removeClass("text-muted");
   }else{
-    $("#customtext").text("CITY, STATE, COUNTRY");
+    $("#customtext").text("Your text here");
+    $("#customtext").addClass("text-muted");
   }
 });
 
