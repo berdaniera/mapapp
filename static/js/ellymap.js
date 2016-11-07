@@ -5,11 +5,14 @@ var coo;
 var latd;
 var lond;
 var coors;
+var bSW = L.latLng(-60, -180),
+    bNE = L.latLng(60, 180),
+    mybounds = L.latLngBounds(bSW, bNE);
 var map = L.map('mapbox').setView([36, -78], 5);
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
   maxZoom: 12,
   minZoom: 3,
-  maxBounds: [[-60,-180],[60,180]],
+  bounds: mybounds,
   attribution: '',
   id: 'mapbox.streets',
   nowrap: true
