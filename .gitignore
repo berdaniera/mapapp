@@ -6,3 +6,4 @@ elly.sock
 *.csv
 wsgi.py
 wsgi.pyc
+*.png

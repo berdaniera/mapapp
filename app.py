@@ -141,9 +141,9 @@ def proof():
     fig.subplots_adjust(left=xoff[0], bottom=yoff[0], right=xoff[1], top=yoff[1], wspace=0, hspace=0)
     fig.savefig("/home/aaron/maps/"+rfn+".pdf")
     #
-    s=4
+    s=6
     # save thumbnail too...
-    figt = plt.figure(figsize=(wid/s,hei/s),dpi=72)
+    figt = plt.figure(figsize=(wid/s,hei/s),dpi=100)
     axt = figt.add_subplot(111, aspect='equal')
     axt.contour(rrr[0], origin='image', levels=ells, colors=cols, linewidths=0.5, corner_mask=True, antialiased=True, extend='neither')
     axt.axis('off')
