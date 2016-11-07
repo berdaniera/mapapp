@@ -66,9 +66,9 @@ function getMapSize(){
 }
 
 // change size
-$('input[name=size]').change( getMapSize() );
+$('input[name=size]').change( getMapSize );
 // change orientation
-$('input[name=orient]').change( getMapSize() );
+$('input[name=orient]').change( getMapSize );
 
 // check custom text
 $('input[name=customtext]').change(function(){
