@@ -94,7 +94,7 @@ def proof():
     comm = "cd "+zdir+" && "+\
         "gdalbuildvrt -overwrite -input_file_list mosaic.txt out.vrt && "+\
         "gdalwarp --config GDAL_CACHEMAX 500 -wm 500 -q -overwrite -dstnodata 0 "+\
-        "-te "+str(v['xmin'])+" "+str(v['ymin'])+" "+str(v['xmax'])+" "+str(v['ymax'])+" -tr "+reso+" "+reso+" -r average out.vrt out.tif"
+        "-te "+str(v['xmin'])+" "+str(v['ymin'])+" "+str(v['xmax'])+" "+str(v['ymax'])+" -tr "+str(reso)+" "+str(reso)+" -r average out.vrt out.tif"
     call(comm, shell=True)
     with rasterio.open(zdir+'/out.tif', 'r+') as r:
         rr = r.read()  # read all raster values
