@@ -96,9 +96,10 @@ def proof():
         "gdalwarp --config GDAL_CACHEMAX 500 -wm 500 -q -overwrite -dstnodata 0 "+\
         "-te "+str(v['xmin'])+" "+str(v['ymin'])+" "+str(v['xmax'])+" "+str(v['ymax'])+" -tr "+str(reso)+" "+str(reso)+" -r average out.vrt out.tif"
     call(comm, shell=True)
+    facr = int(4000/(90*reso/0.000833333))
     with rasterio.open(zdir+'/out.tif', 'r+') as r:
         rr = r.read()  # read all raster values
-        rr = ndimage.filters.uniform_filter(rr, size=21) # 4km moving average
+        rr = ndimage.filters.uniform_filter(rr, size=facr) # 4km moving average
         r.write(rr)
     #
     # IF CLIPPING
