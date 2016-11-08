@@ -115,8 +115,11 @@ def proof():
         ex = [min(lats),max(lats),min(lngs),max(lngs)]
         #proje = "+proj=lcc +lat_1="+str(ex[0])+" +lat_2="+str(ex[1])+" +lat_0="+str((ex[0]+ex[1])/2)+" +lon_0="+str((ex[2]+ex[3])/2)+" +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m"
         proje = "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        # clipcomm = "gdalwarp --config GDAL_CACHEMAX 500 -wm 500 -s_srs '+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0' -t_srs '"+proje+\
+        #     "' -overwrite -dstnodata 0 -r average -cutline "+zdir+"/crop.shp "+zdir+"/out.tif "+zdir+"/outc.tif"
         clipcomm = "gdalwarp --config GDAL_CACHEMAX 500 -wm 500 -s_srs '+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0' -t_srs '"+proje+\
-            "' -overwrite -dstnodata 0 -r average -cutline "+zdir+"/crop.shp "+zdir+"/out.tif "+zdir+"/outc.tif"
+            "' -overwrite -dstnodata 0 -r average -te "+str(v['xmin'])+" "+str(v['ymin'])+" "+str(v['xmax'])+" "+str(v['ymax'])+\
+            " -te_srs '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs' -cutline "+zdir+"/crop.shp "+zdir+"/out.tif "+zdir+"/outc.tif"
         call(clipcomm, shell=True)
         rrr = rasterio.open(zdir+'/outc.tif','r').read()
     else: # reproject to web mercator...
