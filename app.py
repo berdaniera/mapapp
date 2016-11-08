@@ -84,13 +84,17 @@ def proof():
     # BUILD RASTER
     reso = 0.000833333
     if zooml==3:
-        reso = reso*8
+        reso = reso*20
     elif zooml==4:
-        reso = reso*6
+        reso = reso*10
     elif zooml==5:
-        reso = reso*4
+        reso = reso*5
+    elif zooml==6:
+        reso = reso*3
+    elif zooml==7:
+	reso = reso*2
     else:
-        reso = reso*2
+	reso = reso
     comm = "cd "+zdir+" && "+\
         "gdalbuildvrt -overwrite -input_file_list mosaic.txt out.vrt && "+\
         "gdalwarp --config GDAL_CACHEMAX 500 -wm 500 -q -overwrite -dstnodata 0 "+\
@@ -135,7 +139,7 @@ def proof():
     maxele = rrr.max()
     minele = rrr.min()
     ells = [n for n in narr if n < maxele]
-    if (maxele-minele)>2500:
+    if (maxele-minele)>2000:
         ells = [e for e in ells if e%100==0]
     #
     cols = ["#333333" if z%200==0 else "#777777" for z in ells]
