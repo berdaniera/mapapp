@@ -1,6 +1,7 @@
 elly.py
 elly.ini
 ellymap/*
+ellysetup.*
 elly.pyc
 elly.sock
 *.csv

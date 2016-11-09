@@ -16,14 +16,15 @@ import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import matplotlib.font_manager as fm
-
-stripe_keys = {
-  'secret_key': os.environ['SECRET_KEY'],
-  'publishable_key': os.environ['PUBLISHABLE_KEY']
-}
-stripe.api_key = stripe_keys['secret_key']
+import ellysetup as es
 
 app = Flask(__name__)
+
+stripe_keys = {
+  'secret_key': es.SECRET_KEY,
+  'publishable_key': es.PUBLISHABLE_KEY
+}
+stripe.api_key = stripe_keys['secret_key']
 
 di = "/home/aaron/srtm/"
 ff = [f for f in os.listdir(di)]
@@ -98,9 +99,10 @@ def proof():
     comm = "cd "+zdir+" && "+\
         "gdalbuildvrt -overwrite -input_file_list mosaic.txt out.vrt && "+\
         "gdalwarp --config GDAL_CACHEMAX 500 -wm 500 -q -overwrite -dstnodata 0 "+\
-        "-te "+str(v['xmin'])+" "+str(v['ymin'])+" "+str(v['xmax'])+" "+str(v['ymax'])+" -tr "+str(reso)+" "+str(reso)+" -r average out.vrt out.tif"
+        "-te "+str(v['xmin'])+" "+str(v['ymin'])+" "+str(v['xmax'])+" "+str(v['ymax'])+" -tr "+str(reso)+" "+str(reso)+" -r near out.vrt out.tif"
     call(comm, shell=True)
-    facr = int(4000/(90*reso/0.000833333))
+    #facr = int(4000/(90*reso/0.000833333))
+    facr = 15
     with rasterio.open(zdir+'/out.tif', 'r+') as r:
         rr = r.read()  # read all raster values
         rr = ndimage.filters.uniform_filter(rr, size=facr) # 4km moving average
