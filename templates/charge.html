@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
+<div id="finished" class="finished">
   {{response}}
-  <p class="lead">Your order number is: <span class="label label-default">{{order}}</span></p>
-  <p>And we've charged you ${{amount}}</p>
-  <p>If you have questions, feel free to email us at <a href="mailto:ellymapco@gmail.com">ellymapco@gmail.com</a></p>
+  <p class="lead">Your order number is: <span class="label label-default">{{order}}</span> and we've charged you ${{amount}}.</p>
+  <p>If you have questions, please email us at <a href="mailto:ellymapco@gmail.com">ellymapco@gmail.com</a></p>
+  <br><br>
+</div>
 {% endblock %}

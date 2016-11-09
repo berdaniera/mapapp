@@ -225,6 +225,9 @@ $(function() {
     // Request a token from Stripe:
     Stripe.card.createToken($('#payment-form'), stripeResponseHandler);
     // Prevent the form from being submitted:
+    $('html, body').animate({
+      scrollTop: $("#finished").offset().top
+    },500);
     return false;
   });
 });
