@@ -167,7 +167,7 @@ def proof():
     fig.subplots_adjust(left=xoff[0], bottom=yoff[0], right=xoff[1], top=yoff[1], wspace=0, hspace=0)
     fig.savefig("/home/aaron/maps/"+rfn+".pdf")
     #
-    s=5
+    s=4
     # save thumbnail too...
     figt = plt.figure(figsize=(wid/s,hei/s),dpi=100)
     axt = figt.add_subplot(111, aspect='equal')
