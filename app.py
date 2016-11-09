@@ -85,13 +85,13 @@ def proof():
     # BUILD RASTER
     reso = 0.000833333
     if zooml==3:
-        reso = reso*20
+        reso = reso*32
     elif zooml==4:
-        reso = reso*10
+        reso = reso*16
     elif zooml==5:
-        reso = reso*5
+        reso = reso*8
     elif zooml==6:
-        reso = reso*3
+        reso = reso*4
     elif zooml==7:
 	reso = reso*2
     else:
@@ -167,7 +167,7 @@ def proof():
     fig.subplots_adjust(left=xoff[0], bottom=yoff[0], right=xoff[1], top=yoff[1], wspace=0, hspace=0)
     fig.savefig("/home/aaron/maps/"+rfn+".pdf")
     #
-    s=6
+    s=5
     # save thumbnail too...
     figt = plt.figure(figsize=(wid/s,hei/s),dpi=100)
     axt = figt.add_subplot(111, aspect='equal')
@@ -180,6 +180,13 @@ def proof():
     figt.savefig("/home/aaron/elly/static/proofs/"+rfn+".png")
     shutil.rmtree(zdir)
     return jsonify(result=rfn, params=v)
+
+@app.route('/_clear', methods=['POST'])
+def clear():
+    tfnm = request.json['fnm']
+    os.remove('/home/aaron/maps/'+tfnm+'.pdf')
+    os.remove('/home/aaron/elly/static/proofs/'+tfnm+'.png')
+    return jsonify(result="reset success")
 
 @app.route('/_coupon-check', methods=['POST'])
 def coupon():

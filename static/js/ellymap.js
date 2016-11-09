@@ -49,22 +49,22 @@ function getMapSize(){
     $('#orderAmt').val("4000");
     $("#price-final").text("$40");
     if($('input[name=orient]:checked').val()=="landscape"){ // 1824 landscape
-        $('#mapbox').width(440);
-        $('#mapbox').height(280);
+        $('#mapbox').width(550);
+        $('#mapbox').height(350);
     } else { // 1824 portrait
-        $('#mapbox').width(320);
-        $('#mapbox').height(400);
+        $('#mapbox').width(400);
+        $('#mapbox').height(500);
     }
   } else {
     $("#price").text("$50");
     $('#orderAmt').val("5000");
     $("#price-final").text("$50");
     if($('input[name=orient]:checked').val()=="landscape"){ //2436 landscape
-        $('#mapbox').width(510);
-        $('#mapbox').height(300);
+        $('#mapbox').width(850);
+        $('#mapbox').height(500);
     } else { //2436 portrait
-        $('#mapbox').width(330);
-        $('#mapbox').height(480);
+        $('#mapbox').width(550);
+        $('#mapbox').height(800);
     }
   }
   map.invalidateSize();
@@ -91,6 +91,20 @@ $(function(){
   $("button#backup").click(function(){
     $('#checkout').hide();
     $("button#proof").prop("disabled", false);
+    var dat = {}
+    dat['fnm'] = $('#orderId').val();
+    $.ajax({
+      type: 'POST',
+      url:'/_clear',
+      data: JSON.stringify(dat),
+      contentType: 'application/json;charset=UTF-8',
+      success: function(response){
+        $('#proofimg img').attr('src','');//append('<img src="'+imgsrc+'">')
+      },
+      error: function(error){
+        console.log(error);
+      }
+    });
   })
 });
 $(function(){
