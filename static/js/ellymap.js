@@ -7,9 +7,9 @@ var lond;
 var coors;
 var map = L.map('mapbox', {
   maxZoom: 12,
-  minZoom: 3,
+  minZoom: 4,
   maxBounds: [[-60,-180],[60,180]]
-}).setView([36, -78], 5);
+}).setView([36, -78], 6);
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
   maxZoom: 12,
   minZoom: 3,
@@ -49,25 +49,26 @@ function getMapSize(){
     $('#orderAmt').val("4000");
     $("#price-final").text("$40");
     if($('input[name=orient]:checked').val()=="landscape"){ // 1824 landscape
-        $('#mapbox').width(550);
-        $('#mapbox').height(350);
+        $('#mapbox').width(440);
+        $('#mapbox').height(280);
     } else { // 1824 portrait
-        $('#mapbox').width(400);
-        $('#mapbox').height(500);
+        $('#mapbox').width(320);
+        $('#mapbox').height(400);
     }
   } else {
     $("#price").text("$50");
     $('#orderAmt').val("5000");
     $("#price-final").text("$50");
     if($('input[name=orient]:checked').val()=="landscape"){ //2436 landscape
-        $('#mapbox').width(850);
-        $('#mapbox').height(500);
+        $('#mapbox').width(680);
+        $('#mapbox').height(400);
     } else { //2436 portrait
-        $('#mapbox').width(550);
-        $('#mapbox').height(800);
+        $('#mapbox').width(440);
+        $('#mapbox').height(640);
     }
   }
   map.invalidateSize();
+  console.log($('input[name=size]:checked').val());
 }
 
 // change size
@@ -149,12 +150,12 @@ $(function(){
       data: JSON.stringify(data),
       contentType: 'application/json;charset=UTF-8',
       success: function(response){
+        console.log(response);
         $('#orderId').val(response.result);
         $('#orderData').val(JSON.stringify(response.params));
         var imgsrc = "/static/proofs/".concat(response.result,".png");
         $("#loading").hide();
         $('#checkout').show();
-        //$('#proofimg').css({'background-image':'url('+imgsrc+')', 'background-size':'cover', 'background-position':'center'})
         $('#proofimg img').attr('src',imgsrc);//append('<img src="'+imgsrc+'">')
       },
       error: function(error){
