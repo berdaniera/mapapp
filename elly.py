@@ -91,24 +91,27 @@ def proof():
     else:
 	reso = reso
     gdal.BuildVRT(zdir+"/out.vrt",lf)
+    print "virtual dataset done"
     warpargs = gdal.WarpOptions(warpMemoryLimit=500,
 	xRes=reso, yRes=reso, dstNodata=0.,
 	outputBounds=(v['xmin'],v['ymin'],v['xmax'],v['ymax']),
 	resampleAlg="average")
     #warpargs = "-wm 500 -q -overwrite -dstnodata 0 -te "+str(v['xmin'])+" "+str(v['ymin'])+" "+str(v['xmax'])+" "+str(v['ymax'])+" -tr "+str(reso)+" "+str(reso)+" -r average"
     gdal.Warp(zdir+"/out.tif",zdir+"/out.vrt",options=warpargs)
+    print "mosaic done"
     os.remove(zdir+"/out.vrt") # remove the mosaic
     [os.remove(fil) for fil in lf]
     #facr = int(4000/(90*reso/0.000833333))
     if zooml>9:
 	facr = 9
     else:
-	facr = 15
+	facr = 17
     with rasterio.open(zdir+'/out.tif', 'r+') as r:
         rr = r.read()  # read all raster values
         rr = ndimage.filters.uniform_filter(rr, size=facr) # 4km moving average
         r.write(rr)
     #
+    print "smoothing done"
     if (v['clip'] != ""):
         clipcomm = gdal.WarpOptions(warpMemoryLimit=500, 
             srcSRS="+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0", 
@@ -128,6 +131,7 @@ def proof():
     #
     gdal.Warp(zdir+"/outc.tif",zdir+"/out.tif",options=clipcomm)
     os.remove(zdir+"/out.tif")
+    print "reproject done"
     rrr = rasterio.open(zdir+'/outc.tif','r').read()
     # PLOTS
     #rrr[rrr<0] = 0
