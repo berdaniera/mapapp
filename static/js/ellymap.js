@@ -18,13 +18,6 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
   nowrap: true
 }).addTo(map);
 
-new L.Control.GeoSearch({
-    provider: new L.GeoSearch.Provider.OpenStreetMap(),
-    position: 'topleft',
-    showMarker: false,
-    retainZoomLevel: true
-}).addTo(map);
-
 coo = map.getCenter();
 if(coo.lat < 0){ latd='°S // '; }else{ latd='°N // '; }
 if(coo.lng < 0){ lond='°W'; }else{ lond='°E'; }
