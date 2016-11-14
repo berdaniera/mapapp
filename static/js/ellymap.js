@@ -18,8 +18,8 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
   nowrap: true
 }).addTo(map);
 
-L.Control.GeoSearch({
-    provider: L.GeoSearch.Provider.OpenStreetMap(),
+new L.Control.GeoSearch({
+    provider: new L.GeoSearch.Provider.OpenStreetMap(),
     position: 'topleft',
     showMarker: false,
     retainZoomLevel: true
