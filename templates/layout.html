@@ -10,8 +10,6 @@
     <title>ellymap.com // custom elevation posters</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
     <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
-    <script src="{{ url_for('static', filename='src/js/l.control.geosearch.js')}}"></script>
-    <script src="{{ url_for('static', filename='src/js/l.geosearch.provider.openstreetmap.js')}}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='src/css/l.geosearch.css')}}" />
 
     <style>
@@ -397,7 +395,7 @@
             <option value='sWI'>Wisconsin</option>
             <option value='sWY'>Wyoming</option>
           </select></div>
-          
+
             <br>
             <span class='text-muted'><center>Pan to your desired view, or use the search icon on the map to find certain places</center></span>
             <br><br>
@@ -478,15 +476,17 @@
     <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
     <script src="{{ url_for('static', filename='js/ellymap.js')}}"></script>
 
-  <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-87281698-1', 'auto');
-  ga('send', 'pageview');
+    <script src="{{ url_for('static', filename='src/js/l.control.geosearch.js')}}"></script>
+    <script src="{{ url_for('static', filename='src/js/l.geosearch.provider.openstreetmap.js')}}"></script>
 
-  </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-87281698-1', 'auto');
+      ga('send', 'pageview');
+    </script>
 
 </body>
 
