@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
     <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='src/css/l.geosearch.css')}}" />
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+    <script src="{{ url_for('static', filename='src/js/l.control.geosearch.js')}}"></script>
+    <script src="{{ url_for('static', filename='src/js/l.geosearch.provider.openstreetmap.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/ellymap.js')}}"></script>
 
     <style>
       body { padding-top: 70px; }
@@ -401,7 +406,7 @@
             <br><br>
             <center><div id="mapouter" style="outline:1px solid #aaa;box-shadow: 10px 10px 20px grey;padding-bottom:20px;display:inline-block;text-align:center;">
               <div id="mapbox" style="border:20px solid #fff;width:440px;height:640px;"></div>
-              <span id="customtext" class="text-muted"><center><input type="text" class="form-control" name="customtext" placeholder="YOUR TEXT HERE" style="width:440px"></center></span><br>
+              <span id="customtext" class="text-muted"><center><input type="text" name="customtext" placeholder="YOUR TEXT HERE" style="width:440px"></center></span><br>
               <span id="coordinates">36.0°N // 78.0°W</span>
             </div></center>
 
@@ -472,11 +477,6 @@
     <script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
-    <!-- Leaflet JavaScript -->
-    <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
-    <script src="{{ url_for('static', filename='src/js/l.control.geosearch.js')}}"></script>
-    <script src="{{ url_for('static', filename='src/js/l.geosearch.provider.openstreetmap.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/ellymap.js')}}"></script>
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
