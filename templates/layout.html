@@ -403,9 +403,14 @@
             <br>
             <center><div id="mapouter" style="outline:1px solid #aaa;box-shadow: 10px 10px 20px grey;padding-bottom:20px;display:inline-block;text-align:center;">
               <div id="mapbox" style="border:20px solid #fff;width:440px;height:640px;"></div>
-              <span id="customtext"><center><input type="text" name="customtext" placeholder="YOUR TEXT HERE" style="text-align:center;width:440px;"></center></span><br>
+              <div class="input-group" style="width:440px;">
+                <input type="text" class="form-control" name="customtext" placeholder="YOUR TEXT HERE" style="text-align:center;">
+                <span class="input-group=button"><button class="btn btn-secondary" type="button"><span class="glyphicon glyphicon-search"></span></button></span>
+              </div>
               <span id="coordinates">36.0°N // 78.0°W</span>
             </div></center>
+
+
 
             <br><br>
         <button type="button" class="btn btn-primary btn-lg btn-block" id="proof">Preview and checkout</button>

@@ -50,11 +50,11 @@ function getMapSize(){
     $("#price-final").text("$40");
     if($('input[name=orient]:checked').val()=="landscape"){ // 1824 landscape
         $('#mapbox').width(440);
-        $("input[name=customtext]").width(440);
+        $("#customtext").width(440);
         $('#mapbox').height(280);
     } else { // 1824 portrait
         $('#mapbox').width(320);
-        $("input[name=customtext]").width(320);
+        $("#customtext").width(320);
         $('#mapbox').height(400);
     }
   } else {
@@ -63,11 +63,11 @@ function getMapSize(){
     $("#price-final").text("$50");
     if($('input[name=orient]:checked').val()=="landscape"){ //2436 landscape
         $('#mapbox').width(680);
-        $("input[name=customtext]").width(680);
+        $("#customtext").width(680);
         $('#mapbox').height(400);
     } else { //2436 portrait
         $('#mapbox').width(440);
-        $("input[name=customtext]").width(440);
+        $("#customtext").width(440);
         $('#mapbox').height(640);
     }
   }
@@ -118,6 +118,22 @@ $(function(){
     $("button#proof").prop("disabled", false);
   })
 });
+
+$(function(){
+  $("button#getlocation").click(function(){
+    var location = $('input[name=customtext]').val();
+    // we are using MapQuest's Nominatim service
+    var geocode = 'http://nominatim.openstreetmap.org/search?format=json&q=' + location;
+    $.getJSON(geocode, function(data) {
+      if(Object.keys(data).length>0){
+        var latlng = [+data[0].lat, +data[0].lon];
+        console.log(latlng);
+        map.setView(new L.LatLng(+data[0].lat, +data[0].lon));
+      }
+    });
+  });
+});
+
 
 // generate proof
 $(function(){
