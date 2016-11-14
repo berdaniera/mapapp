@@ -57,9 +57,11 @@ function getMapSize(){
     $("#price-final").text("$40");
     if($('input[name=orient]:checked').val()=="landscape"){ // 1824 landscape
         $('#mapbox').width(440);
+        $("input[name=customtext]").width(440);
         $('#mapbox').height(280);
     } else { // 1824 portrait
         $('#mapbox').width(320);
+        $("input[name=customtext]").width(320);
         $('#mapbox').height(400);
     }
   } else {
@@ -68,9 +70,11 @@ function getMapSize(){
     $("#price-final").text("$50");
     if($('input[name=orient]:checked').val()=="landscape"){ //2436 landscape
         $('#mapbox').width(680);
+        $("input[name=customtext]").width(680);
         $('#mapbox').height(400);
     } else { //2436 portrait
         $('#mapbox').width(440);
+        $("input[name=customtext]").width(440);
         $('#mapbox').height(640);
     }
   }
