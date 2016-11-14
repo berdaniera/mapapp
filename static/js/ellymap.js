@@ -18,6 +18,13 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
   nowrap: true
 }).addTo(map);
 
+new L.Control.GeoSearch({
+    provider: new L.GeoSearch.Provider.OpenStreetMap(),
+    position: 'topleft',
+    showMarker: false,
+    retainZoomLevel: true
+}).addTo(map);
+
 coo = map.getCenter();
 if(coo.lat < 0){ latd='°S // '; }else{ latd='°N // '; }
 if(coo.lng < 0){ lond='°W'; }else{ lond='°E'; }
@@ -77,15 +84,15 @@ $('input[name=size]').change( getMapSize );
 $('input[name=orient]').change( getMapSize );
 
 // check custom text
-$('input[name=customtext]').change(function(){
-  if($('input[name=customtext]').val().length>0){
-    $("#customtext").text($('input[name=customtext]').val().toUpperCase());
-    $("#customtext").removeClass("text-muted");
-  }else{
-    $("#customtext").text("YOUR TEXT HERE");
-    $("#customtext").addClass("text-muted");
-  }
-});
+// $('input[name=customtext]').change(function(){
+//   if($('input[name=customtext]').val().length>0){
+//     $("#customtext").text($('input[name=customtext]').val().toUpperCase());
+//     $("#customtext").removeClass("text-muted");
+//   }else{
+//     $("#customtext").text("YOUR TEXT HERE");
+//     $("#customtext").addClass("text-muted");
+//   }
+// });
 
 // reset
 $(function(){
@@ -114,7 +121,6 @@ $(function(){
     $("button#proof").prop("disabled", false);
   })
 });
-
 
 // generate proof
 $(function(){

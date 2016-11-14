@@ -10,6 +10,10 @@
     <title>ellymap.com // custom elevation posters</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
     <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='src/js/l.control.geosearch.js')}}"></script>
+    <script src="{{ url_for('static', filename='src/js/l.geosearch.provider.openstreetmap.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='src/css/l.geosearch.css')}}" />
+
     <style>
       body { padding-top: 70px; }
       .crop { display: none; }
@@ -141,8 +145,8 @@
               <label class="btn btn-primary">
                 <input type="radio" name="cut" value="stat" autocomplete="off"> U.S. State
               </label>
-            </div>
-	   <span class='text-muted'> &nbsp; (Do you want to outline a shape or do you want the map to fill the page?)</span>
+            </div><br>
+	   <span class='text-muted'>Do you want to outline a shape or do you want the map to fill the page? (TIP: places by water might look better if you clip to the country or state)</span>
           <br><br>
 
           <div class="crop" id="ctry"><select class="form-control" id="countries">
@@ -393,15 +397,14 @@
             <option value='sWI'>Wisconsin</option>
             <option value='sWY'>Wyoming</option>
           </select></div>
-          <br>
 
-	      <span>TEXT: &nbsp;</span>
-              <input type="text" class="form-control" name="customtext" placeholder="CITY, STATE, COUNTRY, WHATEVER YOU WANT">
 
             <br><br>
+            <span class='text-muted'>Pan to your desired view, or use the search icon on the map to find certain places</span>
+            <br>
             <center><div id="mapouter" style="outline:1px solid #aaa;box-shadow: 10px 10px 20px grey;padding-bottom:20px;display:inline-block;text-align:center;">
               <div id="mapbox" style="border:20px solid #fff;width:440px;height:640px;"></div>
-              <span id="customtext" class="text-muted">YOUR TEXT HERE</span><br>
+              <span id="customtext" class="text-muted"><input type="text" class="form-control" name="customtext" placeholder="YOUR TEXT HERE, CITY, STATE, COUNTRY, WHATEVER YOU WANT"></span><br>
               <span id="coordinates">36.0°N // 78.0°W</span>
             </div></center>
 
