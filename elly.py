@@ -31,9 +31,6 @@ ff = [f for f in os.listdir(di)]
 fonts = fm.findSystemFonts()
 path = [x for x in fonts if 'Lato-Light.ttf' in x][0]
 prop = fm.FontProperties(fname=path)
-linecol = "#333333"
-narr = range(-450,9000,50)
-wide = range(-400,9000,200)
 
 @app.route('/')
 def index():
@@ -138,11 +135,15 @@ def proof():
     #return jsonify(result=zdir)
     maxele = rrr.max()
     minele = rrr.min()
-    ells = [n for n in narr if n < maxele]
+    ells = [n for n in range(-400,9000,50) if minele <= n <= maxele]
     if (maxele-minele)>2000:
         ells = [e for e in ells if e%100==0]
+    if len(ells)<5:
+	ells = [n for n in range(-400,9000,20) if minele <= n <= maxele]
+    if len(ells)<5:
+	ells = [n for n in range(-400,9000,10) if minele <= n <= maxele]
     #
-    cols = ["#000000" if z%200==0 else "#444444" for z in ells]
+    cols = ["#000000" if z%200==0 else "#555555" for z in ells]
     #
     if(v['shape']=="portrait"):
         wid = int(v['size'][:2])

@@ -42,6 +42,8 @@ $('input[name=cut]').change(function() {
   }
 });
 
+$('#textin').width(440);
+
 // set map window sizes
 function getMapSize(){
   if($('input[name=size]:checked').val()=="1824"){
@@ -123,7 +125,7 @@ $(function(){
   $("button#getlocation").click(function(){
     var location = $('input[name=customtext]').val();
     // we are using MapQuest's Nominatim service
-    var geocode = 'http://nominatim.openstreetmap.org/search?format=json&q=' + location;
+    var geocode = 'https://nominatim.openstreetmap.org/search?format=json&q=' + location;
     $.getJSON(geocode, function(data) {
       if(Object.keys(data).length>0){
         var latlng = [+data[0].lat, +data[0].lon];
